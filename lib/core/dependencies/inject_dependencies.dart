@@ -1,6 +1,7 @@
 import 'package:expense_tracker/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:expense_tracker/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:expense_tracker/features/auth/domain/repositories/auth_repository.dart';
+import 'package:expense_tracker/features/auth/domain/usecases/forgot_password.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/login.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/logout.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/sign_up.dart';

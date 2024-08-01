@@ -53,9 +53,9 @@ class InputField extends StatelessWidget {
           color: textColor,
         ),
         floatingLabelStyle: TextStyle(
-          color: textColor,
-          backgroundColor: ColorPallette.primaryShade3,
-          fontSize: 20,        
+          color: fillColor,
+          backgroundColor: textColor,
+          fontSize: 24,        
         ),
         fillColor: fillColor,
         filled: true,

@@ -6,11 +6,17 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+
   Future<void> signUp({
     required String email,
     required String password,
   });
+
   Future<void> logout();
+
+  Future<void> forgotPassword({
+    required String email,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -53,6 +59,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      throw ServerException(e.message ?? 'Something went wrong!');
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> forgotPassword({required String email}) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(
+        email: email,
       );
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'Something went wrong!');

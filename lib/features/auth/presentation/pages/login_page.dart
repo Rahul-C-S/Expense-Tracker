@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:expense_tracker/core/common/widgets/input_field.dart';
 import 'package:expense_tracker/core/common/widgets/submit_button.dart';
 import 'package:expense_tracker/core/theme/color_pallette.dart';
@@ -27,6 +28,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController registeredEmailController =
+      TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -34,7 +37,42 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    registeredEmailController.dispose();
     super.dispose();
+  }
+
+  void showResetPasswordDialog() {
+    registeredEmailController.clear();
+
+    AwesomeDialog(
+      context: context,
+      animType: AnimType.scale,
+      dialogType: DialogType.noHeader,
+      body: Center(
+        child: InputField(
+          controller: registeredEmailController,
+          hintText: 'Registered email',
+        ),
+      ),
+      btnOkOnPress: () {
+        if (registeredEmailController.text.isNotEmpty) {
+          BlocProvider.of<AuthBloc>(context).add(
+            ForgotPasswordEvent(
+              registeredEmailController.text.trim(),
+            ),
+          );
+        } else {
+
+          showSnackBar(
+            context: context,
+            message: 'Please type your registered email.',
+          );
+          
+        }
+      },
+      btnOkColor: ColorPallette.primary,
+      dialogBackgroundColor: ColorPallette.greyShade4,
+    ).show();
   }
 
   @override
@@ -115,6 +153,21 @@ class _LoginPageState extends State<LoginPage> {
                                 controller: passwordController,
                                 hintText: 'Password',
                                 isObscureText: true,
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  TextButton(
+                                    onPressed: () => showResetPasswordDialog(),
+                                    child: const Text(
+                                      'Forgot password?',
+                                      style: TextStyle(
+                                        color: ColorPallette.primaryShade3,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 20),
                               SubmitButton(

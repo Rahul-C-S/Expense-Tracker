@@ -4,7 +4,6 @@ import 'package:expense_tracker/features/auth/data/datasources/auth_remote_data_
 import 'package:expense_tracker/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
-
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;
 
@@ -44,6 +43,18 @@ class AuthRepositoryImpl implements AuthRepository {
       await authRemoteDataSource.signUp(
         email: email,
         password: password,
+      );
+      return right(null);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> forgotPassword({required String email}) async {
+    try {
+      await authRemoteDataSource.forgotPassword(
+        email: email,
       );
       return right(null);
     } on ServerException catch (e) {

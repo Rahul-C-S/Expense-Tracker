@@ -9,6 +9,8 @@ final class AuthLoading extends AuthState {}
 
 final class AuthSuccess extends AuthState {}
 
+final class ForgotPasswordSuccess extends AuthState {}
+
 final class AuthFailure extends AuthState {
   final String error;
 

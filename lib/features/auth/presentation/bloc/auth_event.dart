@@ -14,6 +14,12 @@ final class LoginEvent extends AuthEvent {
 
 final class LogoutEvent extends AuthEvent {}
 
+final class ForgotPasswordEvent extends AuthEvent {
+  final String email;
+
+  ForgotPasswordEvent(this.email);
+}
+
 final class SignUpEvent extends AuthEvent {
   final String email, password;
 

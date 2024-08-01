@@ -48,6 +48,11 @@ void _initAuth() {
         serviceLocator(),
       ),
     )
+    ..registerFactory(
+      () => ForgotPassword(
+        serviceLocator(),
+      ),
+    )
 
     // Blocs
     ..registerLazySingleton(
@@ -55,6 +60,7 @@ void _initAuth() {
         login: serviceLocator(),
         logout: serviceLocator(),
         signUp: serviceLocator(),
+        forgotPassword: serviceLocator(),
       ),
     );
 }

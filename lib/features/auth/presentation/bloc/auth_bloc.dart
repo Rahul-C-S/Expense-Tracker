@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/common/usecase/usecase.dart';
+import 'package:expense_tracker/features/auth/domain/usecases/forgot_password.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/login.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/logout.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/sign_up.dart';
@@ -12,14 +13,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Login _login;
   final Logout _logout;
   final SignUp _signUp;
+  final ForgotPassword _forgotPassword;
 
   AuthBloc({
     required Login login,
     required Logout logout,
     required SignUp signUp,
+    required ForgotPassword forgotPassword,
   })  : _login = login,
         _logout = logout,
         _signUp = signUp,
+        _forgotPassword = forgotPassword,
         super(AuthInitial()) {
     on<AuthEvent>((event, emit) {
       emit(AuthLoading());
@@ -27,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>(_onLoginEvent);
     on<LogoutEvent>(_onLogoutEvent);
     on<SignUpEvent>(_onSignUpEvent);
+    on<ForgotPasswordEvent>(_onForgotPasswordEvent);
   }
 
   void _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
@@ -56,10 +61,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       ),
     );
-    
+
     res.fold(
       (l) => emit(AuthFailure(l.message)),
       (r) => emit(AuthSuccess()),
+    );
+  }
+
+  void _onForgotPasswordEvent(
+    ForgotPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final res = await _forgotPassword(
+      ForgotPasswordParams(
+        event.email,
+      ),
+    );
+    res.fold(
+      (l) => emit(AuthFailure(l.message)),
+      (r) => emit(ForgotPasswordSuccess()),
     );
   }
 }
