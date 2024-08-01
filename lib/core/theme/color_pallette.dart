@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 
 class ColorPallette {
   // Primary Colors
-  static const Color primary = Color.fromRGBO(121, 84, 161, 1);
-  static const Color primaryShade1 = Color.fromRGBO(180, 159, 202, 1);
-  static const Color primaryShade2 = Color.fromRGBO(71, 51, 95, 1);
-  static const Color primaryShade3 = Color.fromRGBO(247, 240, 254, 1);
-
+  static const Color primary = Color.fromRGBO(185, 92, 80, 1);
+  static const Color primaryShade1 = Color.fromRGBO(222, 132, 123, 1);
+  static const Color primaryShade2 = Color.fromRGBO(59, 4, 4, 1);
+  static const Color primaryShade3 = Color.fromRGBO(249, 241, 240, 1);
 
   // Light and Dark Colors
   static const Color light = Color.fromRGBO(255, 255, 255, 1);

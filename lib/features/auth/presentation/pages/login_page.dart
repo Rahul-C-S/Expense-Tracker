@@ -48,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       animType: AnimType.scale,
       dialogType: DialogType.noHeader,
+      btnCancelOnPress: () {},
       body: Center(
         child: InputField(
           controller: registeredEmailController,
@@ -62,16 +63,16 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else {
-
           showSnackBar(
             context: context,
             message: 'Please type your registered email.',
           );
-          
         }
       },
       btnOkColor: ColorPallette.primary,
       dialogBackgroundColor: ColorPallette.greyShade4,
+      btnCancelColor: ColorPallette.greyShade3,
+      btnOkText: 'Submit',
     ).show();
   }
 
@@ -93,6 +94,18 @@ class _LoginPageState extends State<LoginPage> {
 
                 if (state is AuthFailure) {
                   showSnackBar(context: context, message: state.error);
+                }
+
+                if (state is ForgotPasswordSuccess) {
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.success,
+                    animType: AnimType.topSlide,
+                    headerAnimationLoop: false,
+                    desc:
+                        'A password reset link has been sent to your registered email.',
+                    btnOkOnPress: () {},
+                  ).show();
                 }
 
                 if (state is AuthSuccess) {
