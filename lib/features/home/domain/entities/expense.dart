@@ -3,7 +3,7 @@ class Expense {
   final double amount;
   final int categoryId;
   final String description;
-  final String date;
+  final DateTime date;
 
   Expense({
     required this.expenseId,

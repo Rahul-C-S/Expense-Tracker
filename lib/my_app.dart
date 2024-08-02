@@ -1,7 +1,7 @@
 import 'package:expense_tracker/core/dependencies/inject_dependencies.dart';
 import 'package:expense_tracker/core/theme/theme.dart';
 import 'package:expense_tracker/features/auth/presentation/pages/login_page.dart';
-import 'package:expense_tracker/features/home/presentation/pages/home_screen.dart';
+import 'package:expense_tracker/features/home/presentation/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               // Authenticated
-              return const HomeScreen();
+              return const HomePage();
             }
             // Not authenticated
             return const LoginPage();

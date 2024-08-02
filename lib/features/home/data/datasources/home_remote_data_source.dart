@@ -79,7 +79,13 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           await expenses.where('userId', isEqualTo: userId).get();
       return querySnapshot.docs
           .map(
-            (doc) => ExpenseModel.fromMap(doc.data() as Map<String, dynamic>),
+            (doc) => ExpenseModel(
+              amount: doc['amount'],
+              categoryId: doc['categoryId'],
+              description: doc['description'],
+              date: (doc['date'] as Timestamp).toDate(),
+              expenseId: doc.id,
+            ),
           )
           .toList();
     } catch (e) {

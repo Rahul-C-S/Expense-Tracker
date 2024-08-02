@@ -29,7 +29,7 @@ class HomeRepositoryImpl implements HomeRepository {
     } on ServerException catch (e) {
       return left(
         Failure(
-          e.toString(),
+          e.message,
         ),
       );
     }
@@ -44,7 +44,7 @@ class HomeRepositoryImpl implements HomeRepository {
     } on ServerException catch (e) {
       return left(
         Failure(
-          e.toString(),
+          e.message,
         ),
       );
     }
@@ -59,7 +59,7 @@ class HomeRepositoryImpl implements HomeRepository {
     } on ServerException catch (e) {
       return left(
         Failure(
-          e.toString(),
+          e.message,
         ),
       );
     }
@@ -84,7 +84,7 @@ class HomeRepositoryImpl implements HomeRepository {
     } on ServerException catch (e) {
       return left(
         Failure(
-          e.toString(),
+          e.message,
         ),
       );
     }

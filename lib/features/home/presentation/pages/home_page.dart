@@ -1,10 +1,10 @@
 import 'package:expense_tracker/core/theme/color_pallette.dart';
-import 'package:expense_tracker/features/home/presentation/pages/dashboard_screen.dart';
+import 'package:expense_tracker/features/home/presentation/pages/dashboard_page.dart';
 import 'package:expense_tracker/features/home/presentation/widgets/add_expense_modal.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: const DashboardScreen(),
+      body: const DashboardPage(),
     );
   }
 }

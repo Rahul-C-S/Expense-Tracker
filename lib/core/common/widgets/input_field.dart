@@ -10,6 +10,7 @@ class InputField extends StatelessWidget {
 
   final Color fillColor;
   final Color borderColor;
+  final Color errorColor;
   final Color textColor;
 
   static final RegExp _phoneNumberRegExp = RegExp(r'^(\+91)?[6-9]\d{9}$');
@@ -25,6 +26,7 @@ class InputField extends StatelessWidget {
     this.fillColor = ColorPallette.light,
     this.borderColor = ColorPallette.light,
     this.textColor = ColorPallette.dark,
+    this.errorColor = ColorPallette.danger,
     this.required = true,
     this.keyboard,
   });
@@ -62,8 +64,8 @@ class InputField extends StatelessWidget {
         focusedBorder: _border(),
         border: _border(),
         enabledBorder: _border(),
-        errorStyle: const TextStyle(
-          color: ColorPallette.danger,
+        errorStyle:  TextStyle(
+          color: errorColor,
           fontSize: 14,
         ),
         errorBorder: OutlineInputBorder(

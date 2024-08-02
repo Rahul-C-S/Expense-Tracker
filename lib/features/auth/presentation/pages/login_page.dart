@@ -6,7 +6,7 @@ import 'package:expense_tracker/core/utils/loader.dart';
 import 'package:expense_tracker/core/utils/show_snackbar.dart';
 import 'package:expense_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:expense_tracker/features/auth/presentation/pages/sign_up_page.dart';
-import 'package:expense_tracker/features/home/presentation/pages/home_screen.dart';
+import 'package:expense_tracker/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
+                      builder: (context) => const HomePage(),
                     ),
                     (route) => false,
                   );
@@ -160,12 +160,14 @@ class _LoginPageState extends State<LoginPage> {
                               InputField(
                                 controller: emailController,
                                 hintText: 'Email',
+                                errorColor: ColorPallette.light,
                               ),
                               const SizedBox(height: 20),
                               InputField(
                                 controller: passwordController,
                                 hintText: 'Password',
                                 isObscureText: true,
+                                errorColor: ColorPallette.light,
                               ),
                               const SizedBox(height: 10),
                               Row(
