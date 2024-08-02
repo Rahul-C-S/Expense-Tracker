@@ -21,10 +21,11 @@ final class ForgotPasswordEvent extends AuthEvent {
 }
 
 final class SignUpEvent extends AuthEvent {
-  final String email, password;
+  final String email, password, name;
 
   SignUpEvent({
     required this.email,
     required this.password,
+    required this.name,
   });
 }

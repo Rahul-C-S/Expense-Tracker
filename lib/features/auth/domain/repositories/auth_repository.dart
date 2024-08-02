@@ -9,6 +9,8 @@ abstract interface class AuthRepository {
   Future<Either<Failure, void>> signUp({
     required String email,
     required String password,
+    required String name,
+
   });
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, void>> forgotPassword({

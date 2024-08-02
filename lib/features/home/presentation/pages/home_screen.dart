@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/theme/color_pallette.dart';
 import 'package:expense_tracker/features/home/presentation/pages/dashboard_screen.dart';
+import 'package:expense_tracker/features/home/presentation/widgets/add_expense_modal.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -7,7 +8,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
@@ -32,7 +32,11 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorPallette.primary,
         onPressed: () {
-              
+          showModalBottomSheet(
+            showDragHandle: true,
+            context: context,
+            builder: (context) => const AddExpenseModal(),
+          );
         },
         shape: const CircleBorder(),
         child: const Icon(

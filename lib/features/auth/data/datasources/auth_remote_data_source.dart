@@ -10,6 +10,8 @@ abstract interface class AuthRemoteDataSource {
   Future<void> signUp({
     required String email,
     required String password,
+    required String name,
+
   });
 
   Future<void> logout();
@@ -54,12 +56,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> signUp({
     required String email,
     required String password,
+    required String name,
   }) async {
     try {
-      await firebaseAuth.createUserWithEmailAndPassword(
+     final user = await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+     await user.user?.updateDisplayName(name);
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'Something went wrong!');
     } catch (e) {

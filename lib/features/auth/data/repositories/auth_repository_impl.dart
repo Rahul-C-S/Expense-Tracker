@@ -38,11 +38,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, void>> signUp({
     required String email,
     required String password,
+    required String name,
+
   }) async {
     try {
       await authRemoteDataSource.signUp(
         email: email,
         password: password,
+        name: name,
       );
       return right(null);
     } on ServerException catch (e) {

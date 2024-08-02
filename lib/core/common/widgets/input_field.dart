@@ -55,7 +55,7 @@ class InputField extends StatelessWidget {
         floatingLabelStyle: TextStyle(
           color: fillColor,
           backgroundColor: textColor,
-          fontSize: 24,        
+          fontSize: 24,
         ),
         fillColor: fillColor,
         filled: true,
@@ -79,8 +79,13 @@ class InputField extends StatelessWidget {
             return '$hintText is required';
           }
           if (keyboard == TextInputType.phone) {
-            if(!validatePhone(value)){
+            if (!validatePhone(value)) {
               return 'Invalid phone';
+            }
+          }
+          if (keyboard == TextInputType.number) {
+            if (double.tryParse(value) == null) {
+              return 'Invalid Number';
             }
           }
         }

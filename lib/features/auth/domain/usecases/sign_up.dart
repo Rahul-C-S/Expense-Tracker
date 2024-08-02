@@ -13,12 +13,17 @@ class SignUp implements UseCase<void, SignUpParams> {
     return await authRepository.signUp(
       email: params.email,
       password: params.password,
+      name: params.name,
     );
   }
 }
 
 class SignUpParams {
-  final String email, password;
+  final String email, password, name;
 
-  SignUpParams({required this.email, required this.password});
+  SignUpParams({
+    required this.email,
+    required this.password,
+    required this.name,
+  });
 }

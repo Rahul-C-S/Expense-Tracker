@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final lightMode = ThemeData.light().copyWith(
+    scaffoldBackgroundColor: ColorPallette.primaryShade3,
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       color: Colors.transparent,

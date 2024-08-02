@@ -23,6 +23,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -32,6 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -82,6 +84,11 @@ class _SignUpPageState extends State<SignUpPage> {
                           children: [
                             const SizedBox(height: 60),
                             InputField(
+                              controller: nameController,
+                              hintText: 'Name',
+                            ),
+                            const SizedBox(height: 20),
+                            InputField(
                               controller: emailController,
                               hintText: 'Email',
                             ),
@@ -100,29 +107,30 @@ class _SignUpPageState extends State<SignUpPage> {
                             const SizedBox(height: 20),
                             BlocListener<AuthBloc, AuthState>(
                               listener: (context, state) {
-                               if (state is AuthLoading) {
-                  Loader.circular(context);
-                } else {
-                  Loader.hide(context);
-                }
+                                if (state is AuthLoading) {
+                                  Loader.circular(context);
+                                } else {
+                                  Loader.hide(context);
+                                }
 
-                if (state is AuthFailure) {
-                  showSnackBar(context: context, message: state.error);
-                }
+                                if (state is AuthFailure) {
+                                  showSnackBar(
+                                      context: context, message: state.error);
+                                }
 
-                if (state is AuthSuccess) {
-                  showSnackBar(
-                    context: context,
-                    message: 'Account has been created!',
-                  );
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
-                    (route) => false,
-                  );
-                }
+                                if (state is AuthSuccess) {
+                                  showSnackBar(
+                                    context: context,
+                                    message: 'Account has been created!',
+                                  );
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
                               },
                               child: SubmitButton(
                                 onTap: () {
@@ -140,6 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         .add(SignUpEvent(
                                       email: emailController.text.trim(),
                                       password: passwordController.text.trim(),
+                                      name: nameController.text,
                                     ));
                                   }
                                 },
