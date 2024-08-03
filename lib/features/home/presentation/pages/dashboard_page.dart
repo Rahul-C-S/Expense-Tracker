@@ -4,7 +4,9 @@ import 'package:expense_tracker/core/theme/color_pallette.dart';
 import 'package:expense_tracker/core/utils/date.dart';
 import 'package:expense_tracker/core/utils/loader.dart';
 import 'package:expense_tracker/core/utils/show_snackbar.dart';
+import 'package:expense_tracker/features/home/domain/entities/expense.dart';
 import 'package:expense_tracker/features/home/presentation/blocs/expense/expense_bloc.dart';
+import 'package:expense_tracker/features/home/presentation/pages/expenses_category_page.dart';
 import 'package:expense_tracker/features/home/presentation/widgets/expenses_item.dart';
 import 'package:expense_tracker/features/home/presentation/widgets/summary_card.dart';
 import 'package:expense_tracker/features/home/presentation/widgets/user_details.dart';
@@ -22,7 +24,8 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final _user = serviceLocator<FirebaseAuth>().currentUser;
 
-  DateTime date = DateTime.now();
+  DateTime _date = DateTime.now();
+  double _spent = 0.00;
 
   void _fetchExpenses() {
     BlocProvider.of<ExpenseBloc>(context).add(
@@ -36,15 +39,17 @@ class _DashboardPageState extends State<DashboardPage> {
     _fetchExpenses();
   }
 
-  void leftButtonAction() {
+  void _leftButtonAction() {
     setState(() {
-      date = Date.subtractMonths(date, 1);
+      _spent = 0;
+      _date = Date.subtractMonths(_date, 1);
     });
   }
 
-  void rightButtonAction() {
+  void _rightButtonAction() {
     setState(() {
-      date = Date.addMonths(date, 1);
+      _spent = 0;
+      _date = Date.addMonths(_date, 1);
     });
   }
 
@@ -90,25 +95,27 @@ class _DashboardPageState extends State<DashboardPage> {
             }
           },
           builder: (context, state) {
-            final Map<String, dynamic> groupedExpenses = {};
+            final Map<int, dynamic> groupedExpenses = {};
             if (state is ExpensesFetchSuccess) {
               final expensesList = state.expenses;
 
               for (var expense in expensesList) {
-                if (Date.isInSameMonth(expense.date,date)) {
+                if (Date.isInSameMonth(expense.date, _date)) {
+                  _spent += expense.amount;
+
                   for (var category in Categories.getCategories()) {
                     if (expense.categoryId == category.id) {
-                      if (!groupedExpenses.containsKey(category.name)) {
-                        groupedExpenses[category.name] = {
-                          'id': category.id,
-                          'totalExpense': 0.0,
+                      if (!groupedExpenses.containsKey(category.id)) {
+                        groupedExpenses[category.id] = {
+                          'name': category.name,
+                          'totalExpense': 0.00,
                           'icon': category.icon,
-                          'expenses': []
+                          'expenses': <Expense>[]
                         };
                       }
-                      groupedExpenses[category.name]['totalExpense'] +=
+                      groupedExpenses[category.id]['totalExpense'] +=
                           expense.amount;
-                      groupedExpenses[category.name]['expenses'].add(expense);
+                      groupedExpenses[category.id]['expenses'].add(expense);
                     }
                   }
                 }
@@ -124,10 +131,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     SummaryCard(
                       balance: 0.00,
-                      spent: 0.00,
-                      date: date,
-                      leftButtonAction: leftButtonAction,
-                      rightButtonAction: rightButtonAction,
+                      spent: _spent,
+                      date: _date,
+                      leftButtonAction: _leftButtonAction,
+                      rightButtonAction: _rightButtonAction,
                     ),
                     const SizedBox(
                       height: 30,
@@ -148,15 +155,24 @@ class _DashboardPageState extends State<DashboardPage> {
                         thickness: 0.5,
                       ),
                       itemBuilder: (context, index) {
-                        final categoryName =
+                        final categoryId =
                             groupedExpenses.keys.elementAt(index);
-                        final categoryDetails = groupedExpenses[categoryName];
-                        return ExpensesItem(
-                          id: categoryDetails['id'],
-                          index: index,
-                          total: categoryDetails['totalExpense'],
-                          icon: categoryDetails['icon'],
-                          name: categoryName,
+                        final categoryDetails = groupedExpenses[categoryId];
+                        return GestureDetector(
+                          onTap: () => ExpensesCategoryPage.route(
+                            context: context,
+                            expenses: groupedExpenses[categoryId]['expenses'],
+                            icon: categoryDetails['icon'],
+                            title: categoryDetails['name'],
+                            index: index,
+                          ),
+                          child: ExpensesItem(
+                            id: categoryId,
+                            index: index,
+                            total: categoryDetails['totalExpense'],
+                            icon: categoryDetails['icon'],
+                            name: categoryDetails['name'],
+                          ),
                         );
                       },
                     ),

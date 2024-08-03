@@ -24,7 +24,15 @@ class SummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-          color: ColorPallette.primary, borderRadius: BorderRadius.circular(5)),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          colors: [
+            ColorPallette.primary,
+            ColorPallette.primaryShade1,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -117,15 +125,18 @@ class SummaryCard extends StatelessWidget {
               ),
             ],
           ),
-          IconButton(       
-        
+          IconButton(
             padding: EdgeInsets.zero,
             icon: Icon(
               Icons.arrow_circle_right_outlined,
               size: 34,
-              color: (Date.isInSameMonth(DateTime.now(), date)) ? ColorPallette.greyShade2 : ColorPallette.primaryShade3,
+              color: (Date.isInSameMonth(DateTime.now(), date))
+                  ? ColorPallette.greyShade2
+                  : ColorPallette.primaryShade3,
             ),
-            onPressed: (Date.isInSameMonth(DateTime.now(), date)) ? null : rightButtonAction,
+            onPressed: (Date.isInSameMonth(DateTime.now(), date))
+                ? null
+                : rightButtonAction,
           ),
         ],
       ),

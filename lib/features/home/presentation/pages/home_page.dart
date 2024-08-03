@@ -33,9 +33,15 @@ class HomePage extends StatelessWidget {
         backgroundColor: ColorPallette.primary,
         onPressed: () {
           showModalBottomSheet(
+            isScrollControlled: true,
             showDragHandle: true,
             context: context,
-            builder: (context) => const AddExpenseModal(),
+            builder: (context) =>const FractionallySizedBox(
+              heightFactor: 0.6,  // Adjust this value as needed
+              child: SingleChildScrollView(
+                child: AddExpenseModal(),
+              ),
+            ),
           );
         },
         shape: const CircleBorder(),

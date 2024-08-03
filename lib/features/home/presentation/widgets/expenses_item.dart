@@ -34,11 +34,11 @@ class ExpensesItem extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 7,
+          flex: 6,
           child: Text(name),
         ),
         Expanded(
-          flex: 3,
+          flex: 4,
           child: Text('₹${total.toString()}'),
         ),
       ],
