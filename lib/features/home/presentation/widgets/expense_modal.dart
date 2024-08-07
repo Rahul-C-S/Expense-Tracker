@@ -5,23 +5,28 @@ import 'package:expense_tracker/core/dependencies/inject_dependencies.dart';
 import 'package:expense_tracker/core/theme/color_pallette.dart';
 import 'package:expense_tracker/core/utils/date.dart';
 import 'package:expense_tracker/core/utils/show_snackbar.dart';
+import 'package:expense_tracker/features/home/domain/entities/expense.dart';
 import 'package:expense_tracker/features/home/presentation/blocs/expense/expense_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddExpenseModal extends StatefulWidget {
-  const AddExpenseModal({super.key});
+class ExpenseModal extends StatefulWidget {
+  final Expense? expense;
+  const ExpenseModal({
+    super.key,
+    this.expense,
+  });
 
   @override
-  State<AddExpenseModal> createState() => _AddExpenseModalState();
+  State<ExpenseModal> createState() => _ExpenseModalState();
 }
 
-class _AddExpenseModalState extends State<AddExpenseModal> {
+class _ExpenseModalState extends State<ExpenseModal> {
   int? _selectedCategory;
   final TextEditingController amountController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  DateTime? selectedDate;
+  DateTime? _selectedDate;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -36,6 +41,12 @@ class _AddExpenseModalState extends State<AddExpenseModal> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.expense != null) {
+      amountController.text = widget.expense!.amount.toString();
+      descriptionController.text = widget.expense!.description;
+      _selectedCategory = widget.expense!.categoryId;
+      _selectedDate = widget.expense!.date;
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 20,
@@ -112,13 +123,13 @@ class _AddExpenseModalState extends State<AddExpenseModal> {
                 fixedSize: Size.fromWidth(MediaQuery.of(context).size.width),
               ),
               onPressed: () async {
-                selectedDate = await Date.selectDate(context);
+                _selectedDate = await Date.selectDate(context);
                 setState(() {});
               },
               label: Text(
-                selectedDate != null
+                _selectedDate != null
                     ? Date.convertDate(
-                        selectedDate!,
+                        _selectedDate!,
                         'dd/MM/yyyy',
                       )
                     : 'Select date',
@@ -133,25 +144,41 @@ class _AddExpenseModalState extends State<AddExpenseModal> {
             SubmitButton(
               onTap: () {
                 if (_formKey.currentState!.validate() &&
-                    selectedDate != null &&
+                    _selectedDate != null &&
                     _selectedCategory != null) {
                   Navigator.pop(context);
-                  BlocProvider.of<ExpenseBloc>(context).add(
-                    AddExpenseEvent(
-                      userId: _user!.uid,
-                      amount:
-                          double.tryParse(amountController.text.trim()) ?? 0.00,
-                      categoryId: _selectedCategory!,
-                      description: descriptionController.text,
-                      date: selectedDate!,
-                    ),
-                  );
+                  if (widget.expense == null) {
+                    BlocProvider.of<ExpenseBloc>(context).add(
+                      AddExpenseEvent(
+                        userId: _user!.uid,
+                        amount: double.tryParse(amountController.text.trim()) ??
+                            0.00,
+                        categoryId: _selectedCategory!,
+                        description: descriptionController.text,
+                        date: _selectedDate!,
+                      ),
+                    );
+                  } else {
+                    BlocProvider.of<ExpenseBloc>(context).add(
+                      UpdateExpenseEvent(
+                        expenseId: widget.expense!.expenseId,
+                        amount: double.tryParse(amountController.text.trim()) ??
+                            0.00,
+                        categoryId: _selectedCategory!,
+                        description: descriptionController.text,
+                        date: _selectedDate!,
+                      ),
+                    );
+                  }
                 } else {
                   showSnackBar(
-                      context: context, message: "Please fill all fields.");
+                    context: context,
+                    message: "Please fill all fields.",
+                  );
                 }
               },
-              buttonText: 'Add Expense',
+              buttonText:
+                  widget.expense == null ? 'Add Expense' : 'Update Expense',
               bgColor: ColorPallette.primary,
             ),
           ],

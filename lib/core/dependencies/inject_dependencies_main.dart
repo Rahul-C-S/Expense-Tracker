@@ -6,8 +6,6 @@ Future<void> injectDependencies() async {
   _injectAuth();
   _injectHome();
 
-  final defaultDirectory = (await getApplicationDocumentsDirectory()).path;
-  Hive.defaultDirectory = defaultDirectory;
 
   serviceLocator.registerLazySingleton(
     () => FirebaseFirestore.instance,
@@ -24,6 +22,7 @@ void _injectAuth() {
   serviceLocator
     ..registerFactory<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(
+        serviceLocator(),
         serviceLocator(),
       ),
     )
@@ -106,8 +105,24 @@ void _injectHome() {
         serviceLocator(),
       ),
     )
+    ..registerFactory(
+      () => FetchBalance(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UpdateBalance(
+        serviceLocator(),
+      ),
+    )
 
     // Blocs
+    ..registerLazySingleton(
+      () => BalanceBloc(
+        fetchBalance: serviceLocator(),
+        updateBalance: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton(
       () => ExpenseBloc(
         addExpense: serviceLocator(),

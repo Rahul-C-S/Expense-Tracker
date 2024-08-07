@@ -12,12 +12,14 @@ import 'package:expense_tracker/features/home/data/repositories/home_repository_
 import 'package:expense_tracker/features/home/domain/repositories/home_repository.dart';
 import 'package:expense_tracker/features/home/domain/usecases/add_expense.dart';
 import 'package:expense_tracker/features/home/domain/usecases/delete_expense.dart';
+import 'package:expense_tracker/features/home/domain/usecases/fetch_balance.dart';
 import 'package:expense_tracker/features/home/domain/usecases/fetch_expenses.dart';
+import 'package:expense_tracker/features/home/domain/usecases/update_balance.dart';
 import 'package:expense_tracker/features/home/domain/usecases/update_expense.dart';
+import 'package:expense_tracker/features/home/presentation/blocs/balance/balance_bloc.dart';
 import 'package:expense_tracker/features/home/presentation/blocs/expense/expense_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 part 'inject_dependencies_main.dart';

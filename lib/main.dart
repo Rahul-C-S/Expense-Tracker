@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/config/firebase_options.dart';
 import 'package:expense_tracker/core/dependencies/inject_dependencies.dart';
 import 'package:expense_tracker/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:expense_tracker/features/home/presentation/blocs/balance/balance_bloc.dart';
 import 'package:expense_tracker/features/home/presentation/blocs/expense/expense_bloc.dart';
 import 'package:expense_tracker/my_app.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +28,9 @@ void main() async {
         BlocProvider(
           create: (_) => serviceLocator<ExpenseBloc>(),
         ),
+        BlocProvider(
+          create: (_) => serviceLocator<BalanceBloc>(),
+        )
       ],
       child: MyApp(),
     ),

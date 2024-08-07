@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/common/error/exceptions.dart';
+import 'package:expense_tracker/features/home/data/models/balance_model.dart';
 import 'package:expense_tracker/features/home/data/models/expense_model.dart';
 
 abstract interface class HomeRemoteDataSource {
@@ -25,6 +26,15 @@ abstract interface class HomeRemoteDataSource {
 
   Future<void> deleteExpense({
     required String expenseId,
+  });
+
+  Future<BalanceModel> getBalance({
+    required String userId,
+  });
+
+  Future<void> updateBalance({
+    required String balanceId,
+    required double balance,
   });
 }
 
@@ -111,6 +121,39 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         'created_at': Timestamp.now(),
       };
       await expenses.doc(expenseId).update(data);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<BalanceModel> getBalance({
+    required String userId,
+  }) async {
+    try {
+      final balances = firebaseFirestore.collection('balances');
+
+      final querySnapshot =
+          await balances.where('userId', isEqualTo: userId).get();
+      return BalanceModel(
+        id: querySnapshot.docs.first.id,
+        balance: querySnapshot.docs.first.data()['balance'],
+      );
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateBalance({
+    required String balanceId,
+    required double balance,
+  }) async {
+    try {
+      final balances = firebaseFirestore.collection('balances');
+      await balances.doc(balanceId).update({
+        'balance': balance,
+      });
     } catch (e) {
       throw ServerException(e.toString());
     }

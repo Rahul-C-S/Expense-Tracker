@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/common/error/exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -11,7 +12,6 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
     required String name,
-
   });
 
   Future<void> logout();
@@ -23,8 +23,12 @@ abstract interface class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firebaseFirestore;
 
-  AuthRemoteDataSourceImpl(this.firebaseAuth);
+  AuthRemoteDataSourceImpl(
+    this.firebaseAuth,
+    this.firebaseFirestore,
+  );
 
   @override
   Future<void> login({
@@ -59,11 +63,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String name,
   }) async {
     try {
-     final user = await firebaseAuth.createUserWithEmailAndPassword(
+      final user = await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-     await user.user?.updateDisplayName(name);
+      await user.user?.updateDisplayName(name);
+      final balances = firebaseFirestore.collection('balances');
+      balances.add({
+        'userId': user.user?.uid,
+        'balance': 0.00,
+      });
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'Something went wrong!');
     } catch (e) {

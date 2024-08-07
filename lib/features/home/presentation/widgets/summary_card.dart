@@ -1,9 +1,14 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:expense_tracker/core/common/widgets/input_field.dart';
 import 'package:expense_tracker/core/theme/color_pallette.dart';
 import 'package:expense_tracker/core/utils/date.dart';
+import 'package:expense_tracker/features/home/domain/entities/balance.dart';
+import 'package:expense_tracker/features/home/presentation/blocs/balance/balance_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SummaryCard extends StatelessWidget {
-  final double balance;
+class SummaryCard extends StatefulWidget {
+  final Balance? balance;
   final double spent;
   final DateTime date;
 
@@ -20,7 +25,18 @@ class SummaryCard extends StatelessWidget {
   });
 
   @override
+  State<SummaryCard> createState() => _SummaryCardState();
+}
+
+class _SummaryCardState extends State<SummaryCard> {
+  final TextEditingController balanceController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
+    if (widget.balance != null) {
+      balanceController.text = widget.balance!.balance.toString();
+    }
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
@@ -44,7 +60,7 @@ class SummaryCard extends StatelessWidget {
               size: 34,
               color: ColorPallette.primaryShade3,
             ),
-            onPressed: leftButtonAction,
+            onPressed: widget.leftButtonAction,
           ),
           Column(
             children: [
@@ -61,25 +77,57 @@ class SummaryCard extends StatelessWidget {
                     color: ColorPallette.primaryShade3,
                   ),
                   Text(
-                    balance.toString(),
+                    widget.balance != null
+                        ? widget.balance!.balance.toString()
+                        : '0.00',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: ColorPallette.primaryShade3,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add_rounded,
-                      size: 30,
-                      color: ColorPallette.greyShade4,
+                  Visibility(
+                    visible: widget.balance != null,
+                    child: IconButton(
+                      onPressed: () => AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.noHeader,
+                        title: 'Update balance',
+                        body: Form(
+                          key: _formKey,
+                          child: InputField(
+                            controller: balanceController,
+                            hintText: 'Current balance',
+                            fillColor: ColorPallette.greyShade4,
+                          ),
+                        ),
+                        btnCancelText: 'Dismiss',
+                        btnCancelOnPress: () {},
+                        btnOkText: 'Update',
+                        btnOkOnPress: () {
+                          if (_formKey.currentState!.validate()) {
+                            BlocProvider.of<BalanceBloc>(context).add(
+                              UpdateBalanceEvent(
+                                balanceId: widget.balance!.id,
+                                balance:
+                                    double.tryParse(balanceController.text) ??
+                                        0,
+                              ),
+                            );
+                          }
+                        },
+                      ).show(),
+                      icon: const Icon(
+                        Icons.add_rounded,
+                        size: 30,
+                        color: ColorPallette.greyShade4,
+                      ),
                     ),
                   )
                 ],
               ),
               const Text(
-                'Balance',
+                'Current balance',
                 style: TextStyle(
                   color: ColorPallette.primaryShade3,
                   fontSize: 15,
@@ -89,7 +137,7 @@ class SummaryCard extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                Date.convertDate(date, 'MMMM yyyy'),
+                Date.convertDate(widget.date, 'MMMM yyyy'),
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -107,7 +155,7 @@ class SummaryCard extends StatelessWidget {
                     color: ColorPallette.primaryShade3,
                   ),
                   Text(
-                    spent.toString(),
+                    widget.spent.toString(),
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
@@ -130,13 +178,13 @@ class SummaryCard extends StatelessWidget {
             icon: Icon(
               Icons.arrow_circle_right_outlined,
               size: 34,
-              color: (Date.isInSameMonth(DateTime.now(), date))
+              color: (Date.isInSameMonth(DateTime.now(), widget.date))
                   ? ColorPallette.greyShade2
                   : ColorPallette.primaryShade3,
             ),
-            onPressed: (Date.isInSameMonth(DateTime.now(), date))
+            onPressed: (Date.isInSameMonth(DateTime.now(), widget.date))
                 ? null
-                : rightButtonAction,
+                : widget.rightButtonAction,
           ),
         ],
       ),
