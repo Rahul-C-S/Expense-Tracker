@@ -47,6 +47,9 @@ class _ChartPageState extends State<ChartPage> {
             if (state is ExpenseFailure) {
               showSnackBar(context: context, message: state.error);
             }
+            if(state is ExpenseAddSuccess){
+              _fetchExpenses();
+            }
           },
           builder: (context, state) {
             if (state is ExpensesFetchSuccess) {

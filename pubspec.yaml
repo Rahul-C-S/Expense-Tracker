@@ -30,6 +30,9 @@ dev_dependencies:
 
   flutter_lints: ^3.0.0
   package_rename: ^1.6.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
+
 
 
 
@@ -48,6 +51,21 @@ package_rename_config:
     bundle_name: com.expensetracker.app # (String) The bundle name of the ios app
     package_name: com.expense_racker.app # (String) The product bundle identifier of the ios app
 
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  color: '#f24610'
+  image: "assets/images/logo.jpg"
+
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/logo.jpg"
+  adaptive_icon_background: "#f24610"
+  adaptive_icon_foreground: "assets/images/logo.jpg"
 
   
   
