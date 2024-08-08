@@ -47,7 +47,7 @@ class _ChartPageState extends State<ChartPage> {
             if (state is ExpenseFailure) {
               showSnackBar(context: context, message: state.error);
             }
-            if(state is ExpenseAddSuccess){
+            if (state is ExpenseAddSuccess) {
               _fetchExpenses();
             }
           },
@@ -65,7 +65,9 @@ class _ChartPageState extends State<ChartPage> {
   Widget _buildChart(List<Expense> expenses) {
     final chartData = _processExpenses(expenses);
     final chartDataList = _prepareChartData(chartData);
-    final maxY = chartDataList.map((e) => e['y'] as double).reduce((a, b) => a > b ? a : b);
+    final maxY = chartDataList
+        .map((e) => e['y'] as double)
+        .reduce((a, b) => a > b ? a : b);
 
     return BarChart(
       BarChartData(
@@ -85,6 +87,16 @@ class _ChartPageState extends State<ChartPage> {
     );
   }
 
+  String _formatNumber(double number) {
+    if (number >= 1000000) {
+      return '${(number / 1000000).toStringAsFixed(0)}M';
+    } else if (number >= 1000) {
+      return '${(number / 1000).toStringAsFixed(0)}K';
+    } else {
+      return number.toStringAsFixed(0);
+    }
+  }
+
   FlTitlesData _getTitlesData(List<Map<String, dynamic>> chartDataList) {
     return FlTitlesData(
       rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -95,8 +107,9 @@ class _ChartPageState extends State<ChartPage> {
           getTitlesWidget: (value, meta) => SideTitleWidget(
             axisSide: meta.axisSide,
             child: Text(
-              value.toInt().toString(),
-              style: const TextStyle(fontSize: 10, color: ColorPallette.primaryShade2),
+              _formatNumber(value), // Use the new formatting function here
+              style: const TextStyle(
+                  fontSize: 10, color: ColorPallette.primaryShade2),
             ),
           ),
           reservedSize: 40,
@@ -109,7 +122,8 @@ class _ChartPageState extends State<ChartPage> {
             axisSide: meta.axisSide,
             child: Text(
               chartDataList[value.toInt()]['x'],
-              style: const TextStyle(fontSize: 10, color: ColorPallette.primaryShade2),
+              style: const TextStyle(
+                  fontSize: 10, color: ColorPallette.primaryShade2),
             ),
           ),
           reservedSize: 30,
