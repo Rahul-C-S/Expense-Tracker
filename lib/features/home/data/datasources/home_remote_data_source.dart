@@ -16,6 +16,10 @@ abstract interface class HomeRemoteDataSource {
     required String userId,
   });
 
+  Future<Map<String, dynamic>> getExpense({
+    required String expenseId,
+  });
+
   Future<void> updateExpense({
     required String expenseId,
     required double amount,
@@ -154,6 +158,30 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       await balances.doc(balanceId).update({
         'balance': balance,
       });
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getExpense({
+    required String expenseId,
+  }) async {
+    try {
+      final CollectionReference expenses =
+          FirebaseFirestore.instance.collection('expenses');
+      final DocumentSnapshot documentSnapshot =
+          await expenses.doc(expenseId).get();
+
+      if (documentSnapshot.exists) {
+        final data = documentSnapshot.data() as Map<String, dynamic>;
+        return {
+          'userId': data['userId'] as String,
+          'amount': data['amount'] as double,
+        };
+      } else {
+        throw ServerException('Document does not exist');
+      }
     } catch (e) {
       throw ServerException(e.toString());
     }

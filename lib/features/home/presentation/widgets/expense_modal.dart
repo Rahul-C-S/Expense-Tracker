@@ -42,7 +42,6 @@ class _ExpenseModalState extends State<ExpenseModal> {
   @override
   Widget build(BuildContext context) {
     if (widget.expense != null) {
-      amountController.text = widget.expense!.amount.toString();
       descriptionController.text = widget.expense!.description;
       _selectedCategory = widget.expense!.categoryId;
       _selectedDate = widget.expense!.date;
@@ -96,12 +95,15 @@ class _ExpenseModalState extends State<ExpenseModal> {
             const SizedBox(
               height: 20,
             ),
-            InputField(
-              controller: amountController,
-              hintText: 'Amount',
-              borderColor: ColorPallette.primary,
-              textColor: ColorPallette.primary,
-              keyboard: TextInputType.number,
+            Visibility(
+              visible: widget.expense == null,
+              child: InputField(
+                controller: amountController,
+                hintText: 'Amount',
+                borderColor: ColorPallette.primary,
+                textColor: ColorPallette.primary,
+                keyboard: TextInputType.number,
+              ),
             ),
             const SizedBox(
               height: 20,

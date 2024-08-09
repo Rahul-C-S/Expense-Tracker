@@ -26,6 +26,9 @@ class HomeRepositoryImpl implements HomeRepository {
         description: description,
         date: date,
       );
+      final balance = await homeRemoteDataSource.getBalance(userId: userId);
+      await homeRemoteDataSource.updateBalance(
+          balanceId: balance.id, balance: balance.balance - amount);
       return right(null);
     } on ServerException catch (e) {
       return left(
@@ -41,7 +44,20 @@ class HomeRepositoryImpl implements HomeRepository {
     required String expenseId,
   }) async {
     try {
-      await homeRemoteDataSource.deleteExpense(expenseId: expenseId);
+      final expense =
+          await homeRemoteDataSource.getExpense(expenseId: expenseId);
+      final balance = await homeRemoteDataSource.getBalance(
+        userId: expense['userId'],
+      );
+      await homeRemoteDataSource.updateBalance(
+        balanceId: balance.id,
+        balance: balance.balance + expense['amount'],
+      );
+
+      await homeRemoteDataSource.deleteExpense(
+        expenseId: expenseId,
+      );
+
       return right(null);
     } on ServerException catch (e) {
       return left(

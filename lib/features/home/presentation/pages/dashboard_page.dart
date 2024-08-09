@@ -90,6 +90,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     message: 'Expense added successfully',
                   );
                   _fetchExpenses();
+                  _fetchBalance();
                 }
                 if (state is ExpenseDeleteSuccess) {
                   Navigator.pop(context);
@@ -98,6 +99,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     message: 'Expense deleted successfully',
                   );
                   _fetchExpenses();
+                  _fetchBalance();
                 }
                 if (state is ExpenseUpdateSuccess) {
                   Navigator.pop(context);
